@@ -1,13 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { createTransport, Transporter } from 'nodemailer';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as ejs from 'ejs';
-import { EMAIL_USER, EMAIL_PASS } from '@/config/index'
+import { EMAIL_USER, EMAIL_PASS, AUTHOR } from '@/config/index'
+import { BaseResponse } from '@/common/baseResponse/index';
 
 @Injectable()
 export class EmailService {
   transporter: Transporter;
+  
+  response = new BaseResponse()
 
   constructor() {
     this.transporter = createTransport({
@@ -32,14 +35,13 @@ export class EmailService {
       const emailConfig = {
         code,
         validity,
-        name: '鲸落'
+        name: AUTHOR.NAME
       };
       const emailHtml = ejs.render(emailTemplate, emailConfig);
-
-
+      
       await this.transporter.sendMail({
         from: {
-          name: '鲸灵开发系统',
+          name: AUTHOR.PROJECTNAME,
           address: EMAIL_USER
         },
         to: address,
@@ -47,16 +49,9 @@ export class EmailService {
         html: emailHtml
       });
 
-      return '发送成功';
+      return this.response.baseResponse(200, null)
     } catch (e) {
-      console.log(e);
-      return {
-        message: e,
-        msg: '发送失败'
-      };
-      // throw new BusinessException('读取文件失败！');
+      throw new InternalServerErrorException()
     }
-
-    
   }
 }
