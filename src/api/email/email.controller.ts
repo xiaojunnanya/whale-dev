@@ -9,6 +9,6 @@ export class EmailController {
   @Post()
   sendEmail(@Body() info: EmailDto) {
     // 这边还有请求参数来判断是否正确，目前只是安装了class-validator
-    return this.emailService.sendMail(info.address, info.type);
+    return this.emailService.sendMail(info.email, info.type);
   }
 }
