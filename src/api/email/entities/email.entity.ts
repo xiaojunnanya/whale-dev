@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, BeforeInsert, BeforeUpdate, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class EmailCode {
@@ -14,6 +14,6 @@ export class EmailCode {
   @Column({ type: "varchar" })  // 验证码
   code: string;
 
-  @CreateDateColumn()  // 验证码发送时间
+  @UpdateDateColumn()  // 验证码更新时间
   createDate: Date;
 }

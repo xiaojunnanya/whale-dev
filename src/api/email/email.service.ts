@@ -45,12 +45,13 @@ export class EmailService {
       };
       const emailHtml = ejs.render(emailTemplate, emailConfig)
 
-      // 存储验证码到数据库中
-      await this.emailRepository.save({
-        email,
-        code,
-        type
-      })
+      // 检查邮箱是否已经注册，邮箱存在且类型对的，更新，否则新增
+      const results = await this.emailRepository.findOne({ where: { email, type } })
+      if (results) {
+        await this.emailRepository.update(results.id, {code})
+      }else{
+        await this.emailRepository.save({ email, code, type })
+      }
 
       // 发送邮箱
       await this.transporter.sendMail({
@@ -63,7 +64,7 @@ export class EmailService {
         html: emailHtml
       });
 
-      return this.response.baseResponse(200, null)
+      return this.response.baseResponse(200, code)
     } catch (e) {
       throw new InternalServerErrorException(e)
     }
