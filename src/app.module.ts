@@ -14,7 +14,7 @@ import { MYSQL } from '@/config/index'
       password: MYSQL.PASS,
       database: MYSQL.DB,
       autoLoadEntities: true,
-      synchronize: true, 
+      synchronize: true,
     }),
     EmailModule
   ],

@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, BeforeInsert, BeforeUpdate, UpdateDateColumn } from 'typeorm';
-
+import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+// 换Prisma
 @Entity()
 export class EmailCode {
   @PrimaryGeneratedColumn()
