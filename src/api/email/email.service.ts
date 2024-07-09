@@ -5,9 +5,9 @@ import * as fs from 'fs';
 import * as ejs from 'ejs';
 import { EMAIL_USER, EMAIL_PASS, AUTHOR } from '@/config/index'
 import { BaseResponse } from '@/common/baseResponse/index';
-import { EmailCode } from './entities/email.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 @Injectable()
 export class EmailService {
@@ -15,10 +15,7 @@ export class EmailService {
   
   response = new BaseResponse()
 
-  constructor(
-    @InjectRepository(EmailCode)
-    private readonly emailRepository: Repository<EmailCode>
-  ) {
+  constructor() {
     this.transporter = createTransport({
       host: 'smtp.qq.com', // smtp服务的域名
       port: 587, // smtp服务的端口
@@ -46,13 +43,22 @@ export class EmailService {
       const emailHtml = ejs.render(emailTemplate, emailConfig)
 
       // 检查邮箱是否已经注册，邮箱存在且类型对的，更新，否则新增
-      const results = await this.emailRepository.findOne({ where: { email, type } })
-      if (results) {
-        await this.emailRepository.update(results.id, {code})
+      const results = await prisma.email_code.findFirst({
+        where: { email, type }
+      })
+
+      if( results) {
+        await prisma.email_code.update({
+          where: { id: results.id },
+          data: { code }
+        })
       }else{
-        await this.emailRepository.save({ email, code, type })
+        await prisma.email_code.create({
+          data: { email, code, type }
+        })
       }
 
+      
       // 发送邮箱
       await this.transporter.sendMail({
         from: {

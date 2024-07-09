@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum EmailCodeType {
+  login
+  register
+  reset_password
+}
+
+
+model email_code{
+  id Int @id @default(autoincrement())
+  email String
+  code String
+  type EmailCodeType
+  createdTime DateTime @default(now()) @map("created_time")
+}
