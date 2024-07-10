@@ -22,6 +22,7 @@ async function bootstrap() {
     },
   }));
 
+  // 捕获所有的http错误
   app.useGlobalFilters(new AllExceptionsFilter());
 
   await app.listen(3001);

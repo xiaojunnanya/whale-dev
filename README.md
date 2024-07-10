@@ -67,11 +67,6 @@ import { createTransport, Transporter } from 'nodemailer';
 @Injectable()
 export class EmailService {
 
-  SendEmail(){
-    //发送邮件
-    return '发送邮件';
-  }
-
   create(createEmailDto: CreateEmailDto) {
     return 'This action adds a new email';
   }
