@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { LoginDto, RegisterDto, ResetPasswordDto } from './dto/login.dto';
 import { BaseResponse } from '@/common/baseResponse';
 import { PrismaClient } from '@prisma/client'
+import * as SparkMD5 from 'spark-md5'
 
 const prisma = new PrismaClient()
 
@@ -50,8 +51,12 @@ export class LoginService {
     }
     
     // 登录
-    login(args: LoginDto){
-        // this.checkEmailCode<LoginDto>(args, 'login')
+    async login(args: LoginDto){
+        // 判断有没有这个用户
+        const res = await prisma.user.findMany({where: {email: args.email}})
+        if(!res.length) return this.response.baseResponse(1400, '该邮箱未注册')
+        if(res[0].password !== args.password) return this.response.baseResponse(1400, '密码错误')
+        return this.response.baseResponse(1200, '登录成功')
     }
 
     // 注册
@@ -62,13 +67,17 @@ export class LoginService {
         // 验证码正确了，开始注册账号，先判断这个账号有没有注册
         const user = await prisma.user.findMany({where: {email: args.email}})
         if(user.length > 0) return this.response.baseResponse(1400, '该邮箱已被注册')
+            
+        const spark = new SparkMD5()
+        spark.append(args.password)
+        const password = spark.end()
+
         await prisma.user.create({
             data: {
                 email: args.email,
-                password: args.password
+                password: password
             }
         })
-
         return this.response.baseResponse(1200, '注册成功，请返回登录')
     }
     
