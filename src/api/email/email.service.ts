@@ -70,7 +70,7 @@ export class EmailService {
         html: emailHtml
       });
 
-      return this.response.baseResponse(200, code)
+      return this.response.baseResponse(1200, '发送成功，请注意查收您的邮箱')
     } catch (e) {
       throw new InternalServerErrorException(e)
     }

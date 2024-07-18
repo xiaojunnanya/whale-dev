@@ -2,11 +2,22 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpException, HttpStatus, ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from '@/common/expection/http-exception.filter';
+import * as session from 'express-session';
+import { SESSION } from './config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // 捕获class-validator抛出的异常
+  app.use(
+    session({
+      secret: SESSION.secret, // 加密
+      rolling: true,  // 每次请求添加cookie
+      name: SESSION.name, // 存在浏览器cookie中的key
+      cookie: { maxAge: null }, // 过期时间 ms 
+    }),
+  );
+
+  // 捕获class-validator抛出的异常，重新抛出HttpException，在AllExceptionsFilter中吧捕获
   app.useGlobalPipes(new ValidationPipe({
     exceptionFactory: (validationErrors = []) => {
 
@@ -22,7 +33,7 @@ async function bootstrap() {
     },
   }));
 
-  // 捕获所有的http错误
+  // 捕获所有的错误
   app.useGlobalFilters(new AllExceptionsFilter());
 
   await app.listen(3001);

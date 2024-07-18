@@ -17,7 +17,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       statusCode: status,
       timestamp: new Date().toString(),
       path: request.url,
-      message: 'error',
+      message: Object.values(errorMessage)?.[0]?.[0], // 放第一个错误信息，如果没有就是空
       data: errorMessage
     };
 

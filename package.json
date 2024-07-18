@@ -27,6 +27,7 @@
     "@nestjs/typeorm": "^10.0.2",
     "@prisma/client": "^5.16.1",
     "class-validator": "^0.14.1",
+    "express-session": "^1.18.0",
     "mysql2": "^3.10.2",
     "nodemailer": "^6.9.14",
     "reflect-metadata": "^0.1.13",

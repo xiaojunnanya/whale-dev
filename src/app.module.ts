@@ -5,7 +5,7 @@ import { EmailModule } from '@/api/email/email.module';
 import { LoginModule } from '@/api/login/login.module';
 @Module({
   imports: [
-    EmailModule, LoginModule
+    EmailModule, LoginModule,
   ],
   controllers: [AppController],
   providers: [AppService],
