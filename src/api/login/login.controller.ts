@@ -40,7 +40,13 @@ export class LoginController {
   }
 
   @Post('resetPassword')
-  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
-    return this.loginService.resetPassword(resetPasswordDto);
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto, @Req() req) {
+    const { imgcode } = req.session
+    // 验证码正确
+    if(this.checkCodeFun(imgcode, resetPasswordDto.checkCode)){
+      return this.loginService.resetPassword(resetPasswordDto);
+    }else{
+      return this.response.baseResponse(1400, '验证码错误')
+    }
   }
 }

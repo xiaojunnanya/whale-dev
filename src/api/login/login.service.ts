@@ -18,7 +18,7 @@ export class LoginService {
                 type: type
             }
         })
-
+        
         if(code.length === 0) return {
             result: this.response.baseResponse(1400, '请先发送验证码'),
             type: false
@@ -82,8 +82,24 @@ export class LoginService {
     }
     
     // 重置密码
-    resetPassword(args: ResetPasswordDto){
-        this.checkEmailCode(args, 'reset_password')
+    async resetPassword(args: ResetPasswordDto){
+        const res = await this.checkEmailCode(args, 'reset_password')
+        if(!res.type) return res.result
+
+        const user = await prisma.user.findMany({where: {email: args.email}})
+        if(user.length === 0) return this.response.baseResponse(1400, '该邮箱未被注册')
+
+        // 更新密码
+        const spark = new SparkMD5()
+        spark.append(args.password)
+        const password = spark.end()
+
+        await prisma.user.update({
+            where: {id: user[0].id},
+            data: {password: password}
+        })
+
+        return this.response.baseResponse(1200, '密码更新成功，请返回登录')
     }
     
 }
