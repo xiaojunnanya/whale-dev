@@ -5,6 +5,8 @@ import { AllExceptionsFilter } from '@/common/expection/http-exception.filter';
 import * as session from 'express-session';
 import { SESSION } from './config';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { LogInterceptor } from "@/aop/log.interceptor";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -38,6 +40,18 @@ async function bootstrap() {
 
   // 静态资源的展示
   app.useStaticAssets('src/assets/images/avatar', {prefix: '/avatar'})
+
+  // 全局绑定日志拦截器，打印日志
+  app.useGlobalInterceptors(new LogInterceptor())
+
+  // Swagger 配置
+  const config = new DocumentBuilder()
+    .setTitle('低代码平台后端接口文档')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api-docs', app, document);
 
   await app.listen(3001);
 }
