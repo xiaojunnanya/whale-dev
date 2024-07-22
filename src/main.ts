@@ -4,9 +4,10 @@ import { HttpException, HttpStatus, ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from '@/common/expection/http-exception.filter';
 import * as session from 'express-session';
 import { SESSION } from './config';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.use(
     session({
@@ -33,7 +34,10 @@ async function bootstrap() {
   }));
 
   // 捕获所有的错误
-  app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalFilters(new AllExceptionsFilter())
+
+  // 静态资源的展示
+  app.useStaticAssets('src/assets/images/avatar', {prefix: '/avatar'})
 
   await app.listen(3001);
 }
