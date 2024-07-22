@@ -29,6 +29,6 @@ model user {
   email String
   password String
   username String? @default("鲸灵开发用户")
-  avatar String? @default("/default/default-avatar.jpg")
+  avatar String? @default("/avatar/default-avatar.jpg")
   createdTime DateTime @default(dbgenerated("NOW()")) @db.DateTime @map("created_time")
 }

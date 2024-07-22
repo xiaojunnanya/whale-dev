@@ -36,10 +36,11 @@ export class LoginService {
         }
 
         const formattedDate = new Date().toLocaleString('en-US', {timeZone: 'Asia/Shanghai'});
-        const beforeTime = +new Date(code[0].createdTime)
+        // 获取nowTime是正常的，但是beforeTime经过new Date 转换之后就多了八个小时,这边还得调整
+        const beforeTime = +new Date(code[0].createdTime) - (8 * 60 * 60 * 1000)
         const nowTime = +new Date(formattedDate)
-        // 获取的时间是正常的，但是beforeTime经过new Date 转换之后就多了八个小时,这边还得调整
-        const time = nowTime - ( beforeTime - (8 * 60 * 60 * 1000) )
+        
+        const time = nowTime - beforeTime
 
         if(time > 5 * 60 * 1000) return {
             result: this.response.baseResponse(1400, '邮箱验证码已过期，请重新获取验证码'),
@@ -66,7 +67,6 @@ export class LoginService {
 
         // 登录成功，生成token
         const { userId, email } = user[0]
-
         const token = this.jwtService.sign({ userId, email })
         // const token = this.response.generateToken(userId)
         return this.response.baseResponse(1200, {

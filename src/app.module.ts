@@ -5,11 +5,12 @@ import { AppService } from './app.service';
 
 import { EmailModule } from '@/api/email/email.module';
 import { LoginModule } from '@/api/login/login.module';
+import { UserModule } from '@/api/user/user.module';
 
 
 @Module({
   imports: [
-    EmailModule, LoginModule
+    EmailModule, LoginModule, UserModule
   ],
   controllers: [AppController],
   providers: [AppService],
