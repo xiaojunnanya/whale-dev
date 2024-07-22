@@ -20,7 +20,6 @@ async function bootstrap() {
   // 捕获class-validator抛出的异常，重新抛出HttpException，在AllExceptionsFilter中吧捕获
   app.useGlobalPipes(new ValidationPipe({
     exceptionFactory: (validationErrors = []) => {
-
       const formattedErrors = validationErrors.reduce((acc, error) => {
         acc[error.property] = Object.values(error.constraints)
         return acc;

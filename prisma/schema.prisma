@@ -16,7 +16,7 @@ enum EmailCodeType {
 // 邮箱、验证码、类型、创建时间
 model email_code{
   id Int @id @default(autoincrement())
-  email String
+  email String @unique
   code String
   type EmailCodeType
   createdTime DateTime @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.Timestamp(0) @map("created_time")
@@ -25,9 +25,10 @@ model email_code{
 // 邮箱、密码、昵称、头像、创建时间
 model user {
   id Int @id @default(autoincrement())
+  userId String @unique @map("user_id")
   email String
   password String
   username String? @default("鲸灵开发用户")
-  proPicture String? @map("head_picture") 
+  avatar String? 
   createdTime DateTime @default(dbgenerated("NOW()")) @db.DateTime @map("created_time")
 }

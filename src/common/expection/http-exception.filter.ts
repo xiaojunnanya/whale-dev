@@ -12,7 +12,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     let errorMessage = exception instanceof HttpException ? exception.getResponse() : 'Internal server error';
     errorMessage = typeof errorMessage === 'string' ? errorMessage : (errorMessage as { message: string}).message;
-
+    console.log(exception, 'exception')
     const errorResponse = {
       statusCode: status,
       timestamp: new Date().toString(),
