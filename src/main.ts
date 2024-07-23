@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { HttpException, HttpStatus, ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from '@/common/expection/http-exception.filter';
 import * as session from 'express-session';
-import { SESSION } from './config';
+import { SESSION } from '@/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { LogInterceptor } from "@/aop/log.interceptor";
@@ -41,7 +41,7 @@ async function bootstrap() {
   // 静态资源的展示
   app.useStaticAssets('src/assets/images/avatar', {prefix: '/avatar'})
 
-  // 全局绑定日志拦截器，打印日志
+  // 全局绑定日志拦截器，打印请求日志
   app.useGlobalInterceptors(new LogInterceptor())
 
   // Swagger 配置
