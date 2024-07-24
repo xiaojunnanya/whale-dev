@@ -13,6 +13,14 @@ enum EmailCodeType {
   reset_password
 }
 
+// 进行中 已完成 已暂停 已废弃
+enum ProjectStateType {
+  inProgress
+  completed
+  paused
+  obsolete
+}
+
 // 邮箱、验证码、类型、创建时间
 model email_code{
   id Int @id @default(autoincrement())
@@ -31,4 +39,18 @@ model user {
   username String? @default("鲸灵开发用户")
   avatar String? @default("/avatar/default-avatar.jpg")
   createdTime DateTime @default(dbgenerated("NOW()")) @db.DateTime @map("created_time")
+}
+
+
+model project {
+  id Int @id @default(autoincrement())
+  projectId String @unique @map("project_id") // 应用id
+  userId String @map("user_id") // 用户id
+  projectName String @map("project_name")// 应用名称
+  projectDesc String? @map("project_desc")  // 应用描述
+  projectState ProjectStateType @map("project_state")  // 应用状态
+  projectType String @map("project_type")  // 应用类型
+  projectIcon String @map("project_icon") @default("/projectIcon/default-avatar.jpg")   // 应用icon
+  createdTime DateTime @default(dbgenerated("NOW()")) @db.DateTime @map("created_time")
+  updateTime DateTime @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.Timestamp(0) @map("update_time")
 }

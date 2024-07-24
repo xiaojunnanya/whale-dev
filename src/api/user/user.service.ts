@@ -10,12 +10,15 @@ export class UserService {
     response = new BaseResponse()
 
     async userInfo(userId: string){
-        const res = await prisma.user.findUnique({where:{userId:userId}})
-
-        return this.response.baseResponse(1200, {
-            username: res.username,
-            email: res.email,
-            avatar: res.avatar,
+        const res = await prisma.user.findUnique({
+            where:{userId:userId},
+            select:{
+                username: true,
+                email: true,
+                avatar: true,
+            }
         })
+
+        return this.response.baseResponse(1200, res)
     }
 }

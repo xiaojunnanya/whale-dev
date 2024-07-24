@@ -20,7 +20,7 @@ async function bootstrap() {
     }),
   );
 
-  // 捕获class-validator抛出的异常，重新抛出HttpException，在AllExceptionsFilter中吧捕获
+  // 捕获class-validator抛出的异常，重新抛出HttpException，在AllExceptionsFilter中捕获
   app.useGlobalPipes(new ValidationPipe({
     exceptionFactory: (validationErrors = []) => {
       const formattedErrors = validationErrors.reduce((acc, error) => {
@@ -39,7 +39,7 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter())
 
   // 静态资源的展示
-  app.useStaticAssets('src/assets/images/avatar', {prefix: '/avatar'})
+  app.useStaticAssets('src/assets/images', {prefix: '/images'})
 
   // 全局绑定日志拦截器，打印请求日志
   app.useGlobalInterceptors(new LogInterceptor())
