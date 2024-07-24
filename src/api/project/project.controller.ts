@@ -30,5 +30,10 @@ export class ProjectController {
   @Post('update')
   updateProject(@Body() projectDto: ProjectDto){
     return this.projectService.updateProject(projectDto);
-}
+  }
+
+  @Get('search/:text')
+  searchProject(@Param('text') text: string, @Req() req){
+    return this.projectService.searchProject(req.userId, text);
+  }
 }

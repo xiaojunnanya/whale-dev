@@ -76,6 +76,26 @@ export class ProjectService {
     }
 
     async searchProject(userId: string, projectName: string){
-        
+        const res = await prisma.project.findMany({
+            where:{
+                userId:userId, 
+                projectName: {
+                    contains: projectName, 
+                    // mode: 'insensitive', // 可选，使搜索不区分大小写
+                },
+            },
+            orderBy: { createdTime: 'desc'},
+            select:{
+                id: true,
+                projectId:true,
+                projectName:true,
+                projectDesc:true,
+                projectState:true,
+                projectType:true,
+                projectIcon:true,
+            }
+        })
+
+        return this.response.baseResponse(1200, res)
     }
 }
