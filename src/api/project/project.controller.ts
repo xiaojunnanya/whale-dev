@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { AuthGuard } from '@/common/auth/auth.guard';
-import { ProjectDto } from './dto/project.dto';
+import { ProjectDto, SearchProjectDto } from './dto/project.dto';
 
 
 @UseGuards(AuthGuard)
@@ -14,10 +14,9 @@ export class ProjectController {
     return this.projectService.createProject(req.userId, projectDto);
   }
 
-
-  @Get('get/:page')
-  getProject(@Req() req, @Param('page') page: string){
-    return this.projectService.getProject(req.userId, Number(page));
+  @Post('search')
+  searchProject(@Req() req, @Body() searchProjectDto: SearchProjectDto){
+    return this.projectService.searchProject(req.userId, searchProjectDto)
   }
 
 
@@ -30,10 +29,5 @@ export class ProjectController {
   @Post('update')
   updateProject(@Body() projectDto: ProjectDto){
     return this.projectService.updateProject(projectDto);
-  }
-
-  @Get('search/:text')
-  searchProject(@Param('text') text: string, @Req() req){
-    return this.projectService.searchProject(req.userId, text);
   }
 }

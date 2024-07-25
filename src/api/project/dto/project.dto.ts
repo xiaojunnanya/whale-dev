@@ -22,3 +22,11 @@ export class ProjectDto {
     @ApiProperty({description: '应用图标'})
     projectIcon: string
 }
+
+
+// 查询项目
+export class SearchProjectDto {
+    page: number
+    pageSize: number
+    projectName?: string
+} 

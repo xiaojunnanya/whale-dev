@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProjectDto } from './dto/project.dto';
+import { ProjectDto, SearchProjectDto } from './dto/project.dto';
 import { PrismaClient } from '@prisma/client'
 import { v4 as uuidv4 } from 'uuid'
 import { BaseResponse } from '@/common/baseResponse';
@@ -33,37 +33,6 @@ export class ProjectService {
         return this.response.baseResponse(1200, '应用创建成功')
     }
 
-
-    async getProject(userId: string, page: number){
-        // 每页八个
-        const pageSize = 8;
-        // 跳过的数量
-        const skip = (page - 1) * pageSize
-        // 总数
-        const totalUsers = await prisma.project.count()
-        console.log(totalUsers, 'totalUsers');
-        
-        const res =  await prisma.project.findMany({
-            where:{userId:userId},
-            orderBy: { createdTime: 'desc'},
-            select:{
-                id: true,
-                projectId:true,
-                projectName:true,
-                projectDesc:true,
-                projectState:true,
-                projectType:true,
-                projectIcon:true,
-            },
-            skip: skip, take: pageSize,
-        })
-        return this.response.baseResponse(1200, res, {
-            total: totalUsers,
-            page: page,
-            pageSize: pageSize,
-        })
-    }
-
     async deleteProject(id: number){
         await prisma.project.delete({
             where:{id:id}
@@ -88,14 +57,27 @@ export class ProjectService {
         return this.response.baseResponse(1200, '更新成功')
     }
 
-    async searchProject(userId: string, projectName: string){
-        const res = await prisma.project.findMany({
+    async searchProject(userId: string, searchProjectDto: SearchProjectDto){
+        const { projectName, page, pageSize } = searchProjectDto
+
+        // 跳过的数量
+        const skip = (page - 1) * pageSize
+        // 总数
+        const totalUsers = await prisma.project.count({
             where:{
-                userId:userId, 
+                userId:userId,
                 projectName: {
-                    contains: projectName, 
-                    // mode: 'insensitive', // 可选，使搜索不区分大小写
-                },
+                    contains: projectName,
+                }
+            }
+        })
+        
+        const res =  await prisma.project.findMany({
+            where:{
+                userId:userId,
+                projectName: {
+                    contains: projectName,
+                }
             },
             orderBy: { createdTime: 'desc'},
             select:{
@@ -106,9 +88,14 @@ export class ProjectService {
                 projectState:true,
                 projectType:true,
                 projectIcon:true,
-            }
+            },
+            skip: skip, take: pageSize,
         })
-
-        return this.response.baseResponse(1200, res)
+        
+        return this.response.baseResponse(1200, res, {
+            total: totalUsers,
+            page: page,
+            pageSize: pageSize,
+        })
     }
 }
