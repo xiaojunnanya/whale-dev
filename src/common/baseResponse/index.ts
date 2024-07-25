@@ -10,11 +10,12 @@ export class BaseResponse<T> {
         1500: '服务器内部错误',
     }
 
-    public baseResponse  = (statusCode: number, data: T) => {
+    public baseResponse  = (statusCode: number, data: T, other?: any) => {
         return {
             statusCode,
             message: this.codeWithMes[statusCode],
-            data
+            data,
+            ...other
         }
     }
 

@@ -34,7 +34,15 @@ export class ProjectService {
     }
 
 
-    async getProject(userId: string){
+    async getProject(userId: string, page: number){
+        // 每页八个
+        const pageSize = 8;
+        // 跳过的数量
+        const skip = (page - 1) * pageSize
+        // 总数
+        const totalUsers = await prisma.project.count()
+        console.log(totalUsers, 'totalUsers');
+        
         const res =  await prisma.project.findMany({
             where:{userId:userId},
             orderBy: { createdTime: 'desc'},
@@ -46,9 +54,14 @@ export class ProjectService {
                 projectState:true,
                 projectType:true,
                 projectIcon:true,
-            }
+            },
+            skip: skip, take: pageSize,
         })
-        return this.response.baseResponse(1200, res)
+        return this.response.baseResponse(1200, res, {
+            total: totalUsers,
+            page: page,
+            pageSize: pageSize,
+        })
     }
 
     async deleteProject(id: number){

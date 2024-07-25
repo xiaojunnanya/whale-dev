@@ -15,9 +15,9 @@ export class ProjectController {
   }
 
 
-  @Get('get')
-  getProject(@Req() req){
-    return this.projectService.getProject(req.userId);
+  @Get('get/:page')
+  getProject(@Req() req, @Param('page') page: string){
+    return this.projectService.getProject(req.userId, Number(page));
   }
 
 
