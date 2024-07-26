@@ -33,6 +33,27 @@ export class ProjectService {
         return this.response.baseResponse(1200, '应用创建成功')
     }
 
+    async getProjectInfo(userId: string, projectId: string){
+        const res = await prisma.project.findFirst({
+            where:{
+                userId:userId,
+                projectId:projectId,
+            },
+            select:{
+                id: true,
+                projectId:true,
+                projectName:true,
+                projectDesc:true,
+                projectState:true,
+                projectType:true,
+                projectIcon:true,
+            }
+        })
+
+        return this.response.baseResponse(1200, res)
+        
+    }
+
     async deleteProject(id: number){
         await prisma.project.delete({
             where:{id:id}

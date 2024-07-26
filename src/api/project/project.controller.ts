@@ -20,6 +20,12 @@ export class ProjectController {
   }
 
 
+  @Get('info/:projectId')
+  getProjectInfo(@Req() req, @Param('projectId') projectId: string){
+    return this.projectService.getProjectInfo(req.userId, projectId);
+  }
+
+
   @Delete('delete/:id')
   deleteProject(@Param('id') id: string){
     return this.projectService.deleteProject(Number(id));
