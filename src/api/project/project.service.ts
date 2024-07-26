@@ -98,4 +98,43 @@ export class ProjectService {
             pageSize: pageSize,
         })
     }
+
+
+    // 应用类型
+    async getProjectType(){
+        const res = await prisma.config.findMany({
+            select:{
+                projectType: true
+            }
+        })
+
+        
+        return this.response.baseResponse(1200, JSON.parse(res[0].projectType))
+    }
+    
+
+    // 应用状态
+    async getProjectState(){
+        const res = await prisma.config.findMany({
+            select:{
+                projectState: true
+            }
+        })
+
+        return this.response.baseResponse(1200, JSON.parse(res[0].projectState))
+        
+    }
+    
+
+    // 应用状态颜色
+    async getProjectStateColor(){
+        const res = await prisma.config.findMany({
+            select:{
+                projectStateColor: true
+            }
+        })
+
+        return this.response.baseResponse(1200, JSON.parse(res[0].projectStateColor))
+        
+    }
 }

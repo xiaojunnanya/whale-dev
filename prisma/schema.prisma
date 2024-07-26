@@ -54,3 +54,14 @@ model project {
   createdTime DateTime @default(dbgenerated("NOW()")) @db.DateTime @map("created_time")
   updateTime DateTime @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.Timestamp(0) @map("update_time")
 }
+
+
+
+model config{
+  id Int @id @default(autoincrement())
+  projectState String @db.Text @map("project_state")  // 应用状态
+  projectStateColor String @db.Text @map("project_state_color")  // 应用状态颜色
+  projectType String @db.Text @map("project_type")  // 应用类型
+  createdTime DateTime @default(dbgenerated("NOW()")) @db.DateTime @map("created_time")
+  updateTime DateTime @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.Timestamp(0) @map("update_time")
+}

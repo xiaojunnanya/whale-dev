@@ -8,7 +8,7 @@ import { BaseResponse } from '@/common/baseResponse/index';
 import { PrismaClient } from '@prisma/client'
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto, RegisterDto, ResetPasswordDto } from './dto/auth.dto';
-import SparkMD5 from 'spark-md5';
+import * as SparkMD5 from 'spark-md5';
 import { v4 as uuidv4 } from 'uuid'
 
 const prisma = new PrismaClient()

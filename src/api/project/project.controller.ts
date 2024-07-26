@@ -30,4 +30,20 @@ export class ProjectController {
   updateProject(@Body() projectDto: ProjectDto){
     return this.projectService.updateProject(projectDto);
   }
+
+
+  @Get('type')
+  getProjectType(){
+    return this.projectService.getProjectType();
+  }
+
+  @Get('state')
+  getProjectState(){
+    return this.projectService.getProjectState();
+  }
+
+  @Get('stateColor')
+  getProjectStateColor(){
+    return this.projectService.getProjectStateColor();
+  }
 }
