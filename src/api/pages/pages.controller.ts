@@ -1,6 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { PagesService } from './pages.service';
-import { CreatePageDto } from './dto/pages.dto';
+import { CreatePageDto, UpdatePageDto } from './dto/pages.dto';
 
 @Controller('pages')
 export class PagesController {
@@ -11,4 +11,21 @@ export class PagesController {
   createPages(@Body() createPageDto: CreatePageDto) {
     return this.pagesService.createPages(createPageDto);
   }
+
+
+  @Get(':projectId')
+  getPages(@Param('projectId') projectId: string){
+    return this.pagesService.getPages(projectId);
+  }
+
+
+  @Post('update')
+  updatePages(@Body() updatePageDto: UpdatePageDto) {
+    return this.pagesService.updatePages(updatePageDto);
+  }
+
+
+  @Delete(':pageId')
+  deletePages(@Param('pageId') pageId: string) {
+    return this.pagesService.deletePages(pageId)}
 }

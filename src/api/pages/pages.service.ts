@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePageDto } from './dto/pages.dto';
+import { CreatePageDto, UpdatePageDto } from './dto/pages.dto';
 import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid'
 import { BaseResponse } from '@/common/baseResponse';
@@ -21,5 +21,51 @@ export class PagesService {
         })
 
         return this.response.baseResponse(1200, '创建成功')
+    }
+
+
+    async getPages(projectId: string){
+        const res = await prisma.pages.findMany({
+            where: {
+                projectId: projectId
+            },
+            orderBy: { createdTime: 'desc'},
+            select: {
+                id: true,
+                pageId: true,
+                pageName: true,
+                pageType: true,
+            }
+        })
+
+        return this.response.baseResponse(1200, res)
+    }
+
+
+    async updatePages(updatePageDto: UpdatePageDto){
+        await prisma.pages.update({
+            where: {
+                pageId: updatePageDto.pageId
+            },
+            data: {
+                pageName: updatePageDto.pageName
+            }
+        })
+
+
+        return this.response.baseResponse(1200, '更新成功')
+    }
+
+
+    async deletePages(pageId: string){
+        console.log(pageId);
+        
+        await prisma.pages.delete({
+            where: {
+                pageId: pageId
+            }
+        })
+
+        return this.response.baseResponse(1200, '删除成功')
     }
 }
