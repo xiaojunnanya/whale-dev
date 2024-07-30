@@ -68,4 +68,19 @@ export class PagesService {
 
         return this.response.baseResponse(1200, '删除成功')
     }
+
+    async getPageInfo(pageId: string){
+        const res = await prisma.pages.findUnique({
+            where: {
+                pageId: pageId
+            },
+            select: {
+                id: true,
+                pageName: true,
+                pageType: true,
+            }
+        })
+
+        return this.response.baseResponse(1200, res)
+    }
 }

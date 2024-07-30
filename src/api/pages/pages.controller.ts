@@ -27,5 +27,11 @@ export class PagesController {
 
   @Delete(':pageId')
   deletePages(@Param('pageId') pageId: string) {
-    return this.pagesService.deletePages(pageId)}
+    return this.pagesService.deletePages(pageId)
+  }
+
+  @Get('/info/:pageId')
+  getPageInfo(@Param('pageId') pageId: string) {
+    return this.pagesService.getPageInfo(pageId)
+  }
 }
