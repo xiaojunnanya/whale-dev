@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePageDto, UpdatePageDto } from './dto/pages.dto';
+import { CreatePageDto, SavePageJsonDto, UpdatePageDto } from './dto/pages.dto';
 import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid'
 import { BaseResponse } from '@/common/baseResponse';
 
 const prisma = new PrismaClient()
 
+// 遗留的问题：多表联查，权限的问题！！！烦死了
 @Injectable()
 export class PagesService {
     response = new BaseResponse()
@@ -21,6 +22,38 @@ export class PagesService {
         })
 
         return this.response.baseResponse(1200, '创建成功')
+    }
+    
+    async savePageJson(savePageJsonDto: SavePageJsonDto){
+        // 查询有没有pageId，没有新增，有更新
+        const pageContent = await prisma.page_content.findUnique({
+            where: {
+                pageId: savePageJsonDto.pageId,
+                projectId: savePageJsonDto.projectId
+            }
+        })
+
+        if(!pageContent){
+            await prisma.page_content.create({
+                data: {
+                    pageId: savePageJsonDto.pageId,
+                    pageJson: savePageJsonDto.pageJson,
+                    projectId: savePageJsonDto.projectId
+                }
+            })
+        }else{
+            await prisma.page_content.update({
+                where: {
+                    pageId: savePageJsonDto.pageId,
+                    projectId: savePageJsonDto.projectId
+                },
+                data: {
+                    pageJson: savePageJsonDto.pageJson
+                }
+            })
+        }
+
+        return this.response.baseResponse(1200, '保存成功')
     }
 
 
@@ -58,8 +91,6 @@ export class PagesService {
 
 
     async deletePages(pageId: string){
-        console.log(pageId);
-        
         await prisma.pages.delete({
             where: {
                 pageId: pageId
@@ -83,4 +114,27 @@ export class PagesService {
 
         return this.response.baseResponse(1200, res)
     }
+
+    async getPageJson(userId: string, projectId: string, pageId: string){
+        const result = await prisma.$queryRaw
+        `
+        SELECT
+            page_content.id,
+            page_content.page_json AS pageJson
+        FROM
+            page_content
+        LEFT JOIN 
+            project 
+        on 
+            page_content.project_id = project.project_id 
+        WHERE 
+            project.user_id = ${userId}
+            AND page_content.project_id = ${projectId}
+            AND page_content.page_id = ${pageId}
+        `
+
+        return this.response.baseResponse(1200, result[0])
+    }
+
+    
 }

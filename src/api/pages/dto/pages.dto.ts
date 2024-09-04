@@ -24,7 +24,23 @@ export class UpdatePageDto {
     pageName: string;
 
     
+    @ApiProperty({description: '页面ID'})
+    @IsNotEmpty({message:'页面ID不能为空'})
+    pageId: string
+}
+
+
+export class SavePageJsonDto{
+
     @ApiProperty({description: '项目ID'})
     @IsNotEmpty({message:'项目ID不能为空'})
+    projectId: string
+
+    @ApiProperty({description: '页面ID'})
+    @IsNotEmpty({message:'页面ID不能为空'})
     pageId: string
+
+    @ApiProperty({description: '页面JSON'})
+    @IsNotEmpty({message:'页面JSON不能为空'})
+    pageJson: string
 }

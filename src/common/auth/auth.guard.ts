@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
                     secret: TOKEN.secret
                 }
             );
-
+            console.log(payload, 'payload')
             req['userId'] = payload?.userId;
             req['email'] = payload?.email;
         } catch {

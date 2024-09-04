@@ -66,6 +66,16 @@ model pages{
   updateTime DateTime @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.Timestamp(0) @map("update_time")
 }
 
+
+model page_content{
+  id Int @id @default(autoincrement())
+  projectId String @map("project_id") // 应用id
+  pageId String @unique @map("page_id") // 页面id
+  pageJson String @db.MediumText @map("page_json") // 页面json
+  createdTime DateTime @default(dbgenerated("NOW()")) @db.DateTime @map("created_time")
+  updateTime DateTime @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.Timestamp(0) @map("update_time")
+}
+
 model config{
   id Int @id @default(autoincrement())
   projectState String @db.Text @map("project_state")  // 应用状态

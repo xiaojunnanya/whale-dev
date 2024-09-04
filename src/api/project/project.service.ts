@@ -128,9 +128,8 @@ export class ProjectService {
                 projectType: true
             }
         })
-
         
-        return this.response.baseResponse(1200, JSON.parse(res[0].projectType))
+        return this.response.baseResponse(1200, res.length === 0 ? [] : JSON.parse(res?.[0]?.projectType))
     }
     
 
@@ -142,7 +141,7 @@ export class ProjectService {
             }
         })
 
-        return this.response.baseResponse(1200, JSON.parse(res[0].projectState))
+        return this.response.baseResponse(1200, res.length === 0 ? [] : JSON.parse(res?.[0]?.projectState))
         
     }
     
@@ -155,7 +154,7 @@ export class ProjectService {
             }
         })
 
-        return this.response.baseResponse(1200, JSON.parse(res[0].projectStateColor))
+        return this.response.baseResponse(1200, res.length === 0 ? [] : JSON.parse(res?.[0]?.projectStateColor))
         
     }
 }
